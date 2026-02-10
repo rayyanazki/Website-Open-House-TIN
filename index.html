@@ -52,14 +52,17 @@
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-        .reveal {
+        /* Apple-style Reveal Interaction */
+        .reveal-apple {
             opacity: 0;
-            transform: translateY(30px);
-            transition: all 1s cubic-bezier(0.5, 0, 0, 1);
+            transform: translateY(40px) scale(0.98);
+            transition: opacity 1.2s cubic-bezier(0.21, 0.6, 0.35, 1), 
+                        transform 1.2s cubic-bezier(0.21, 0.6, 0.35, 1);
+            will-change: opacity, transform;
         }
-        .reveal.active {
+        .reveal-apple.active {
             opacity: 1;
-            transform: translateY(0);
+            transform: translateY(0) scale(1);
         }
 
         .division-card {
@@ -70,26 +73,41 @@
             box-shadow: 0 20px 40px rgba(0,0,0,0.15);
         }
 
-        #main-content, #division-detail, #auditorium-layout {
-            transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
-        }
-
         .page-hidden {
             display: none;
             opacity: 0;
-            transform: translateY(20px);
         }
 
-        #home {
-            background-color: #003666; /* Fallback color */
+        /* Stacked Scroll Layout Styles */
+        .program-container {
+            position: relative;
+            padding-bottom: 5vh;
+        }
+        .program-image-wrapper {
+            width: 100%;
+            max-width: 850px;
+            margin: 0 auto;
+            border-radius: 2.5rem;
+            overflow: hidden;
+            box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.25);
+            aspect-ratio: 16 / 9;
+            background: #f3f4f6;
+        }
+        .program-image-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .text-float {
+            position: relative;
+            z-index: 20;
+        }
+        @media (min-width: 768px) {
+            .text-float-left { transform: translateX(-15%); margin-right: auto; }
+            .text-float-right { transform: translateX(15%); margin-left: auto; text-align: right; }
         }
 
-        /* Auditorium Specific Styles */
-        .cinema-screen {
-            background: linear-gradient(to bottom, #fff, #e2e8f0);
-            box-shadow: 0 0 40px rgba(255,255,255,0.4);
-            transform: perspective(500px) rotateX(-10deg);
-        }
+        /* Seat Styles */
         .seat {
             width: 24px;
             height: 24px;
@@ -97,26 +115,19 @@
             border-radius: 4px 4px 8px 8px;
             position: relative;
         }
-        .seat::after {
-            content: '';
-            position: absolute;
-            bottom: -2px;
-            left: 2px;
-            right: 2px;
-            height: 4px;
-            background: #7f1d1d;
-            border-radius: 2px;
-        }
     </style>
 </head>
-<body class="font-sans text-gray-800 antialiased bg-gray-50">
+<body class="font-sans text-gray-800 antialiased bg-gray-50 overflow-x-hidden">
 
     <!-- Navigation -->
     <nav class="fixed w-full z-50 bg-white/90 backdrop-blur-md shadow-sm transition-all duration-300" id="navbar">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-20">
                 <div class="flex-shrink-0 flex items-center gap-3 cursor-pointer" onclick="goHome()">
-                    <div class="w-10 h-10 bg-ipb-blue rounded-full flex items-center justify-center text-white font-bold text-lg">IPB</div>
+                    <div class="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center overflow-hidden border border-gray-100 shadow-sm">
+                        <!-- Input Link Logo Google Drive Disini -->
+                        <img id="main-logo" data-src="https://upload.wikimedia.org/wikipedia/id/thumb/0/0e/Logo_IPB.svg/1200px-Logo_IPB.svg.png" src="" alt="IPB Logo" class="w-full h-full object-contain p-1">
+                    </div>
                     <div>
                         <span class="font-heading font-bold text-lg text-ipb-blue block leading-none">Open House TIN</span>
                         <span class="text-[10px] text-gray-500 font-semibold tracking-wide uppercase">Agroindustrial Technology</span>
@@ -129,444 +140,331 @@
                     <a href="#himalogin" class="text-gray-600 hover:text-ipb-blue font-semibold transition">Himalogin</a>
                     <a href="#register" class="px-6 py-2.5 bg-ipb-blue text-white font-bold rounded-full hover:bg-blue-800 transition transform hover:scale-105 shadow-lg">Register Now</a>
                 </div>
-
-                <div class="md:hidden flex items-center">
-                    <button id="mobile-menu-btn" class="text-gray-600 hover:text-ipb-blue focus:outline-none">
-                        <i class="fas fa-bars text-2xl"></i>
-                    </button>
+                <div class="md:hidden">
+                    <button class="text-gray-600"><i class="fas fa-bars text-2xl"></i></button>
                 </div>
             </div>
         </div>
     </nav>
 
-    <!-- MAIN CONTENT PAGE -->
+    <!-- MAIN CONTENT -->
     <main id="main-content">
         <!-- Hero Section -->
-        <section id="home" class="min-h-screen flex items-center justify-center pt-20 relative overflow-hidden bg-cover bg-center bg-no-repeat gdrive-bg"
-                 data-src="https://drive.google.com/file/d/1_7kZuUrN4_L5HrkCRmrA3sgZRVCBKZrK/view?usp=drive_link">
-            <div class="absolute inset-0 hero-overlay"></div>
+        <section id="home" class="min-h-screen flex items-center justify-center pt-20 relative overflow-hidden bg-ipb-blue">
+            <!-- Input Link Background Hero Google Drive Disini -->
+            <div id="hero-bg" class="absolute inset-0 z-0 bg-cover bg-center" data-bg="MASUKKAN_URL_GOOGLE_DRIVE_BACKGROUND_HERO_DISINI"></div>
+            <div class="absolute inset-0 hero-overlay z-0"></div>
+            
             <div class="container mx-auto px-4 text-center text-white z-10 relative">
-                <h1 class="font-heading text-4xl md:text-6xl lg:text-7xl font-extrabold mb-6 leading-tight reveal">
+                <h1 class="font-heading text-4xl md:text-6xl lg:text-7xl font-extrabold mb-6 leading-tight reveal-apple">
                     Agroindustry Innovation<br>
-                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-400 text-6xl">The Future</span>
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-400">The Future</span>
                 </h1>
-                <p class="text-lg md:text-xl text-gray-200 mb-10 max-w-2xl mx-auto font-light italic reveal">"Transforming Agriculture into Sustainable Industry"</p>
-                <div class="flex flex-col sm:flex-row justify-center gap-4 reveal">
-                    <a href="#register" class="px-8 py-4 bg-yellow-500 text-ipb-blue font-bold rounded-full hover:bg-yellow-400 transition shadow-lg transform hover:-translate-y-1">Get Tickets</a>
+                <p class="text-lg md:text-xl text-gray-200 mb-10 max-w-2xl mx-auto font-light italic reveal-apple">"Transforming Agriculture into Sustainable Industry"</p>
+                <div class="flex flex-col sm:flex-row justify-center gap-4 reveal-apple">
+                    <a href="#register" class="px-8 py-4 bg-yellow-500 text-ipb-blue font-bold rounded-full hover:bg-yellow-400 transition shadow-lg">Get Tickets</a>
                     <a href="#about" class="px-8 py-4 bg-transparent border-2 border-white text-white font-bold rounded-full hover:bg-white hover:text-ipb-blue transition">Explore</a>
                 </div>
             </div>
         </section>
 
-        <!-- About Section -->
-        <section id="about" class="py-24 bg-gray-50">
+        <!-- About Section (Why TIN?) -->
+        <section id="about" class="py-24 bg-white">
             <div class="container mx-auto px-4">
-                <div class="text-center mb-16 reveal">
-                    <h2 class="font-heading text-4xl font-bold text-gray-900 mb-4">Why <span class="text-ipb-blue">Open House TIN</span>?</h2>
-                    <p class="text-gray-600 max-w-3xl mx-auto text-lg">We engineer added value through process technology, industrial system management, and environmental engineering for a sustainable agroindustry.</p>
+                <div class="text-center mb-20 reveal-apple">
+                    <h2 class="font-heading text-5xl font-extrabold text-gray-900 mb-6 uppercase tracking-tight">Why <span class="text-ipb-blue">TIN?</span></h2>
+                    <div class="w-24 h-2 bg-ipb-yellow mx-auto mb-8 rounded-full"></div>
+                    <p class="text-gray-600 max-w-4xl mx-auto text-xl leading-relaxed font-medium">
+                        Departemen Teknologi Industri Pertanian (TIN) IPB University merupakan pionir dalam pengembangan nilai tambah komoditas pertanian melalui integrasi teknologi proses, manajemen sistem industri, dan teknik lingkungan. Kami mencetak inovator yang mampu mengubah tantangan pangan global menjadi peluang industri berkelanjutan.
+                    </p>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16 reveal">
-                    <div class="group overflow-hidden rounded-3xl shadow-lg aspect-[4/5] relative">
-                        <img src="INSERT_LAB_1_DRIVE_LINK_HERE" alt="Lab 1" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 gdrive-img">
-                        <div class="absolute inset-0 bg-gradient-to-t from-ipb-blue/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-6">
-                            <p class="text-white font-bold text-lg text-center w-full">Process Technology Lab</p>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-10 reveal-apple">
+                    <div class="group overflow-hidden rounded-[2.5rem] shadow-2xl aspect-[4/5] relative bg-gray-100 border border-gray-100">
+                        <img data-src="https://images.unsplash.com/photo-1581093458791-9f302e683800?q=80&w=1000" src="" alt="Agro-Lab" class="gdrive-img w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity p-8 flex items-end">
+                            <p class="text-white font-bold text-lg text-center w-full">Advanced Laboratory</p>
                         </div>
                     </div>
-                    <div class="group overflow-hidden rounded-3xl shadow-lg aspect-[4/5] relative">
-                        <img src="INSERT_LAB_2_DRIVE_LINK_HERE" alt="Lab 2" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 gdrive-img">
-                        <div class="absolute inset-0 bg-gradient-to-t from-ipb-blue/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-6">
-                            <p class="text-white font-bold text-lg text-center w-full">Industrial System Simulation</p>
+                    <div class="group overflow-hidden rounded-[2.5rem] shadow-2xl aspect-[4/5] relative bg-gray-100 border border-gray-100">
+                        <img data-src="https://images.unsplash.com/photo-1581092160562-40aa08e78837?q=80&w=1000" src="" alt="Process Tech" class="gdrive-img w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity p-8 flex items-end">
+                            <p class="text-white font-bold text-lg text-center w-full">Process Technology</p>
                         </div>
                     </div>
-                    <div class="group overflow-hidden rounded-3xl shadow-lg aspect-[4/5] relative">
-                        <img src="INSERT_LAB_3_DRIVE_LINK_HERE" alt="Lab 3" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 gdrive-img">
-                        <div class="absolute inset-0 bg-gradient-to-t from-ipb-blue/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-6">
-                            <p class="text-white font-bold text-lg text-center w-full">Environmental Engineering</p>
+                    <div class="group overflow-hidden rounded-[2.5rem] shadow-2xl aspect-[4/5] relative bg-gray-100 border border-gray-100">
+                        <img data-src="https://images.unsplash.com/photo-1532187863486-abf9d39d9995?q=80&w=1000" src="" alt="Bio-Energy" class="gdrive-img w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity p-8 flex items-end">
+                            <p class="text-white font-bold text-lg text-center w-full">Bio-Industrial System</p>
                         </div>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 reveal">
-                    <div class="flex flex-col items-center text-center gap-4 p-8 bg-white rounded-3xl shadow-sm border border-gray-100">
-                        <div class="w-16 h-16 bg-blue-50 rounded-2xl flex items-center justify-center text-ipb-blue text-2xl">
-                            <i class="fas fa-microscope"></i>
-                        </div>
-                        <h3 class="font-bold text-lg">Process Tech</h3>
-                        <p class="text-sm text-gray-500">Value-added engineering for agriculture.</p>
-                    </div>
-                    <div class="flex flex-col items-center text-center gap-4 p-8 bg-white rounded-3xl shadow-sm border border-gray-100">
-                        <div class="w-16 h-16 bg-green-50 rounded-2xl flex items-center justify-center text-green-600 text-2xl">
-                            <i class="fas fa-seedling"></i>
-                        </div>
-                        <h3 class="font-bold text-lg">Sustainability</h3>
-                        <p class="text-sm text-gray-500">Eco-friendly industrial systems.</p>
-                    </div>
-                    <div class="flex flex-col items-center text-center gap-4 p-8 bg-white rounded-3xl shadow-sm border border-gray-100">
-                        <div class="w-16 h-16 bg-yellow-50 rounded-2xl flex items-center justify-center text-yellow-600 text-2xl">
-                            <i class="fas fa-cog"></i>
-                        </div>
-                        <h3 class="font-bold text-lg">Management</h3>
-                        <p class="text-sm text-gray-500">Manufacturing & Supply Chain.</p>
-                    </div>
-                    <div class="flex flex-col items-center text-center gap-4 p-8 bg-white rounded-3xl shadow-sm border border-gray-100">
-                        <div class="w-16 h-16 bg-purple-50 rounded-2xl flex items-center justify-center text-purple-600 text-2xl">
-                            <i class="fas fa-lightbulb"></i>
-                        </div>
-                        <h3 class="font-bold text-lg">Innovation</h3>
-                        <p class="text-sm text-gray-500">Developing future agro-products.</p>
                     </div>
                 </div>
             </div>
         </section>
 
         <!-- Himalogin Section -->
-        <section id="himalogin" class="py-24 bg-white overflow-hidden">
-            <div class="container mx-auto px-4 mb-12 reveal">
-                <h2 class="font-heading text-4xl font-bold text-center mb-4">Himalogin Divisions</h2>
-                <p class="text-gray-500 text-center max-w-xl mx-auto italic font-medium">Click on a division card to see details.</p>
+        <section id="himalogin" class="py-24 bg-gray-50 overflow-hidden">
+            <div class="container mx-auto px-4 mb-12 reveal-apple">
+                <h2 class="font-heading text-4xl font-bold text-center mb-4 uppercase">Himalogin Departments</h2>
+                <p class="text-gray-500 text-center max-w-xl mx-auto italic font-medium">Click on a card to discover our specific work programs.</p>
             </div>
-
-            <div class="flex overflow-x-auto py-10 px-8 gap-6 hide-scrollbar cursor-grab active:cursor-grabbing reveal" id="scrollContainer">
+            <div class="flex overflow-x-auto py-10 px-8 gap-8 hide-scrollbar cursor-grab active:cursor-grabbing reveal-apple" id="scrollContainer">
                 <!-- Cards generated via JS -->
-            </div>
-            
-            <div class="flex justify-center gap-2 mt-8 reveal">
-                <div class="w-24 h-1 bg-gray-200 rounded-full overflow-hidden">
-                    <div id="scrollBar" class="h-full bg-ipb-blue w-0 transition-all duration-100"></div>
-                </div>
             </div>
         </section>
 
-        <!-- Registration Section -->
+        <!-- Register Section -->
         <section id="register" class="py-24 bg-ipb-blue text-white">
-            <div class="container mx-auto px-4 max-w-4xl reveal">
-                <div class="glass-card p-10 md:p-14 rounded-3xl shadow-2xl text-gray-800 relative">
-                    <!-- Success Overlay -->
-                    <div id="success-overlay" class="absolute inset-0 bg-white/95 rounded-3xl z-20 flex flex-col items-center justify-center p-8 text-center hidden">
-                        <div class="w-20 h-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center text-4xl mb-6">
-                            <i class="fas fa-check-circle"></i>
-                        </div>
-                        <h3 class="text-3xl font-bold text-ipb-blue mb-2">Registrasi Berhasil!</h3>
-                        <p class="text-gray-600 mb-8 max-w-md">Data kamu sudah kami terima. Yuk, intip layout auditorium tempat acaramu berlangsung nanti!</p>
-                        <button onclick="openAuditorium()" class="px-8 py-4 bg-ipb-blue text-white font-bold rounded-full hover:bg-blue-900 transition transform hover:scale-105 shadow-xl flex items-center gap-3">
-                            <i class="fas fa-map-marked-alt"></i> Layout Tour
-                        </button>
+            <div class="container mx-auto px-4 max-w-4xl reveal-apple">
+                <div class="glass-card p-10 md:p-14 rounded-[3rem] text-gray-800 relative shadow-2xl">
+                    <div id="success-overlay" class="absolute inset-0 bg-white/98 rounded-[3rem] z-20 flex flex-col items-center justify-center p-8 text-center hidden">
+                        <i class="fas fa-check-circle text-7xl text-green-500 mb-6"></i>
+                        <h3 class="text-3xl font-bold text-ipb-blue mb-2">Registration Complete!</h3>
+                        <p class="text-gray-500 mb-8">You are now part of our journey. Let's explore the venue!</p>
+                        <button onclick="openAuditorium()" class="px-10 py-4 bg-ipb-blue text-white font-bold rounded-full shadow-lg hover:scale-105 transition">Explore Layout</button>
                     </div>
-
-                    <div class="text-center mb-10">
-                        <h2 class="text-4xl font-bold mb-3 text-ipb-blue">Register Now</h2>
-                        <p class="text-gray-500 italic">"Secure your future in Agroindustry today"</p>
+                    <div class="text-center mb-12">
+                        <h2 class="text-4xl font-extrabold text-ipb-blue mb-2">Ready to Join?</h2>
+                        <p class="text-gray-400 italic font-medium">"Your future in Agroindustry starts here"</p>
                     </div>
-                    <form id="registrationForm" class="space-y-6">
-                        <div class="grid md:grid-cols-2 gap-6">
-                            <div class="space-y-2">
-                                <label class="text-sm font-bold text-gray-700 ml-1">Full Name</label>
-                                <input type="text" name="name" id="name" required class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-ipb-blue outline-none" placeholder="Enter your name">
-                            </div>
-                            <div class="space-y-2">
-                                <label class="text-sm font-bold text-gray-700 ml-1">Email</label>
-                                <input type="email" name="email" id="email" required class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-ipb-blue outline-none" placeholder="name@email.com">
-                            </div>
-                            <div class="space-y-2">
-                                <label class="text-sm font-bold text-gray-700 ml-1">WhatsApp Number</label>
-                                <input type="tel" name="whatsapp" id="whatsapp" required class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-ipb-blue outline-none" placeholder="0812xxxx">
-                            </div>
-                            <div class="space-y-2">
-                                <label class="text-sm font-bold text-gray-700 ml-1">School/Origin</label>
-                                <input type="text" name="school" id="school" required class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-ipb-blue outline-none" placeholder="SMA/SMK/MA">
-                            </div>
+                    <form id="registrationForm" class="grid md:grid-cols-2 gap-8">
+                        <div class="space-y-2">
+                            <label class="text-xs font-bold uppercase tracking-widest text-gray-500 ml-1">Full Name</label>
+                            <input type="text" placeholder="John Doe" required class="w-full px-5 py-4 rounded-2xl border border-gray-200 focus:ring-2 focus:ring-ipb-blue outline-none transition">
                         </div>
-                        <button type="submit" class="w-full bg-ipb-blue text-white font-bold py-4 rounded-xl hover:bg-blue-900 transition shadow-xl mt-4">Submit Registration</button>
+                        <div class="space-y-2">
+                            <label class="text-xs font-bold uppercase tracking-widest text-gray-500 ml-1">Email</label>
+                            <input type="email" placeholder="john@email.com" required class="w-full px-5 py-4 rounded-2xl border border-gray-200 focus:ring-2 focus:ring-ipb-blue outline-none transition">
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-xs font-bold uppercase tracking-widest text-gray-500 ml-1">WhatsApp</label>
+                            <input type="tel" placeholder="0812..." required class="w-full px-5 py-4 rounded-2xl border border-gray-200 focus:ring-2 focus:ring-ipb-blue outline-none transition">
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-xs font-bold uppercase tracking-widest text-gray-500 ml-1">School</label>
+                            <input type="text" placeholder="SMA / SMK / Univ" required class="w-full px-5 py-4 rounded-2xl border border-gray-200 focus:ring-2 focus:ring-ipb-blue outline-none transition">
+                        </div>
+                        <button type="submit" class="md:col-span-2 w-full bg-ipb-blue text-white font-bold py-5 rounded-2xl hover:bg-blue-900 shadow-xl transition transform active:scale-95">Complete Registration</button>
                     </form>
                 </div>
             </div>
         </section>
     </main>
 
-    <!-- DIVISION DETAIL PAGE -->
+    <!-- DETAIL PAGE (STACKED SCROLL) -->
     <div id="division-detail" class="page-hidden min-h-screen pt-32 pb-20 bg-white">
-        <div class="container mx-auto px-4 max-w-4xl">
-            <button onclick="goHome()" class="mb-8 flex items-center gap-2 text-ipb-blue font-bold hover:gap-4 transition-all">
+        <div class="container mx-auto px-4 max-w-6xl">
+            <button onclick="goHome()" class="mb-12 flex items-center gap-2 text-ipb-blue font-bold hover:gap-4 transition-all">
                 <i class="fas fa-arrow-left"></i> Back to Home
             </button>
-            <div id="detail-content" class="opacity-100"></div>
+            <div id="detail-content"></div>
         </div>
     </div>
 
-    <!-- AUDITORIUM LAYOUT PAGE -->
+    <!-- AUDITORIUM PAGE -->
     <div id="auditorium-layout" class="page-hidden min-h-screen pt-32 pb-20 bg-[#121212] text-white">
-        <div class="container mx-auto px-4 max-w-5xl">
-            <div class="flex flex-col md:flex-row justify-between items-center mb-12 gap-6">
-                <button onclick="goHome()" class="flex items-center gap-2 text-gray-400 font-bold hover:text-white transition-all">
-                    <i class="fas fa-arrow-left"></i> Back to Home
-                </button>
-                <div class="text-center">
-                    <h2 class="font-heading text-3xl font-bold mb-2">Auditorium Layout</h2>
-                    <p class="text-gray-500 text-sm">Mini Cinema Style • Seating Arrangement</p>
-                </div>
-                <div class="flex items-center gap-4">
-                    <div class="flex items-center gap-2"><div class="w-3 h-3 bg-red-700 rounded-sm"></div> <span class="text-xs text-gray-400">Tersedia</span></div>
-                    <div class="flex items-center gap-2"><div class="w-3 h-3 bg-gray-600 rounded-sm"></div> <span class="text-xs text-gray-400">Terisi</span></div>
-                </div>
-            </div>
-
-            <!-- Screen Area -->
-            <div class="flex flex-col items-center mb-20">
-                <div class="w-full max-w-2xl h-4 cinema-screen rounded-full mb-4"></div>
-                <span class="text-sm font-bold tracking-widest text-gray-500 uppercase">Screen / Layar Utama</span>
-            </div>
-
-            <!-- Seating Plan -->
-            <div class="flex flex-col items-center gap-4 overflow-x-auto pb-10">
-                <div id="cinema-grid" class="flex flex-col gap-4 min-w-[600px]">
-                    <!-- Rows generated via JS -->
-                </div>
-            </div>
-
-            <!-- Exit Doors -->
-            <div class="flex justify-between mt-12 px-10">
-                <div class="flex flex-col items-center gap-2">
-                    <div class="w-16 h-24 bg-red-900/50 border-2 border-red-700 rounded-t-lg flex items-center justify-center">
-                        <i class="fas fa-door-open text-red-500"></i>
-                    </div>
-                    <span class="text-xs font-bold text-red-500 uppercase tracking-tighter">Exit Left</span>
-                </div>
-                <div class="flex flex-col items-center gap-2">
-                    <div class="w-16 h-24 bg-red-900/50 border-2 border-red-700 rounded-t-lg flex items-center justify-center">
-                        <i class="fas fa-door-open text-red-500"></i>
-                    </div>
-                    <span class="text-xs font-bold text-red-500 uppercase tracking-tighter">Exit Right</span>
-                </div>
-            </div>
+        <div class="container mx-auto px-4 text-center">
+            <button onclick="goHome()" class="mb-10 text-gray-400 hover:text-white flex items-center gap-2 mx-auto"><i class="fas fa-arrow-left"></i> Back</button>
+            <h2 class="text-4xl font-extrabold text-red-600 mb-20 uppercase tracking-widest">Auditorium Venue</h2>
+            <div id="cinema-grid" class="flex flex-col items-center gap-6"></div>
         </div>
     </div>
 
-    <!-- Footer -->
-    <footer class="bg-ipb-dark text-gray-400 py-16 px-4">
-        <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-12 text-center md:text-left mb-12">
-            <!-- Brand Info -->
-            <div>
-                <h4 class="text-white font-bold mb-4 uppercase tracking-widest">Open House TIN IPB</h4>
-                <p class="text-sm leading-relaxed">Connecting students to the world of Agroindustrial Technology. Join us and shape the future of sustainable industry.</p>
+    <footer class="bg-ipb-dark text-gray-500 py-16 px-4">
+        <div class="max-w-6xl mx-auto text-center">
+            <h4 class="text-white font-bold mb-4 uppercase tracking-widest">Open House TIN IPB</h4>
+            <div class="flex justify-center gap-6 mb-8 text-xl">
+                <a href="#" class="hover:text-ipb-yellow transition"><i class="fab fa-instagram"></i></a>
+                <a href="#" class="hover:text-ipb-yellow transition"><i class="fab fa-linkedin"></i></a>
             </div>
-            
-            <!-- Contact Info -->
-            <div>
-                <h4 class="text-white font-bold mb-4 uppercase tracking-widest">Contact Us</h4>
-                <ul class="space-y-3 text-sm">
-                    <li class="flex items-center justify-center md:justify-start gap-3">
-                        <i class="fas fa-envelope text-ipb-yellow w-5"></i>
-                        <a href="mailto:tin@apps.ipb.ac.id" class="hover:text-white transition">tin@apps.ipb.ac.id</a>
-                    </li>
-                    <li class="flex items-center justify-center md:justify-start gap-3">
-                        <i class="fab fa-instagram text-ipb-yellow w-5"></i>
-                        <a href="https://instagram.com/himalogin" target="_blank" class="hover:text-white transition">@himalogin</a>
-                    </li>
-                    <li class="flex items-center justify-center md:justify-start gap-3">
-                        <i class="fas fa-map-marker-alt text-ipb-yellow w-5"></i>
-                        <span>IPB Dramaga, Bogor, Indonesia</span>
-                    </li>
-                </ul>
-            </div>
-
-            <!-- Quick Links -->
-            <div>
-                <h4 class="text-white font-bold mb-4 uppercase tracking-widest">Follow Himalogin</h4>
-                <div class="flex justify-center md:justify-start gap-4">
-                    <a href="#" class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-ipb-yellow hover:text-ipb-blue transition">
-                        <i class="fab fa-facebook-f"></i>
-                    </a>
-                    <a href="https://instagram.com/himalogin" target="_blank" class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-ipb-yellow hover:text-ipb-blue transition">
-                        <i class="fab fa-instagram"></i>
-                    </a>
-                    <a href="#" class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-ipb-yellow hover:text-ipb-blue transition">
-                        <i class="fab fa-linkedin-in"></i>
-                    </a>
-                    <a href="#" class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-ipb-yellow hover:text-ipb-blue transition">
-                        <i class="fab fa-youtube"></i>
-                    </a>
-                </div>
-            </div>
-        </div>
-        
-        <div class="border-t border-white/10 pt-8 text-center">
-            <p class="text-[10px]">&copy; 2026 Open House TIN. All Rights Reserved.</p>
+            <p class="text-xs">&copy; 2026 IPB University - Agroindustrial Technology. All Rights Reserved.</p>
         </div>
     </footer>
 
     <script>
-        // Drive Link Converter
+        // --- GDrive URL Support Helper ---
         function formatGDriveUrl(url) {
-            if (!url || url.includes('INSERT_')) return '';
-            const regex = /\/d\/([^\/]+)\//;
+            if (!url || typeof url !== 'string') return url;
+            if (url.includes('MASUKKAN_URL')) return null;
+            
+            // Regex for various GDrive share links
+            const regex = /(?:\/d\/|id=)([\w-]+)/;
             const match = url.match(regex);
+            
             if (match && match[1]) {
+                // Return direct thumbnail/image link from GDrive
                 return `https://lh3.googleusercontent.com/u/0/d/${match[1]}`;
             }
             return url;
         }
 
-        function initImages() {
-            document.querySelectorAll('.gdrive-bg').forEach(section => {
-                const driveUrl = section.getAttribute('data-src');
-                const formatted = formatGDriveUrl(driveUrl);
-                if (formatted) section.style.backgroundImage = `url('${formatted}')`;
-            });
-            document.querySelectorAll('.gdrive-img').forEach(img => {
-                const driveUrl = img.getAttribute('src');
-                const formatted = formatGDriveUrl(driveUrl);
-                if (formatted) img.src = formatted;
-                else img.src = 'https://images.unsplash.com/photo-1581093458791-9f302e683800?q=80&w=1000';
-            });
-        }
-
+        // Data Divisions (Semua link gambar diproses formatGDriveUrl di JS)
         const divisions = [
-            { id: 1, name: "Research & Tech", img: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&q=80&w=800" },
-            { id: 2, name: "HRD", img: "https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&q=80&w=800" },
-            { id: 3, name: "Info & Comm", img: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&q=80&w=800" },
-            { id: 4, name: "Talent & Interest", img: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&q=80&w=800" },
-            { id: 5, name: "External", img: "https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&q=80&w=800" },
-            { id: 6, name: "Entrepreneur", img: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&q=80&w=800" },
-            { id: 7, name: "Student Welfare", img: "https://images.unsplash.com/photo-1454165833767-027ffcb71411?auto=format&fit=crop&q=80&w=800" },
-            { id: 8, name: "Social Service", img: "https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&q=80&w=800" }
+            { id: 1, name: "Research & Tech", img: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800" },
+            { id: 2, name: "HRD", img: "https://images.unsplash.com/photo-1552664730-d307ca884978?w=800" },
+            { id: 3, name: "Info & Comm", img: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800" },
+            { id: 4, name: "Talent & Interest", img: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=800" },
+            { id: 5, name: "External", img: "https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=800" },
+            { id: 6, name: "Entrepreneur", img: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=800" },
+            { id: 7, name: "Student Welfare", img: "https://images.unsplash.com/photo-1454165833767-027ffcb71411?w=800" },
+            { id: 8, name: "Social Service", img: "https://images.unsplash.com/photo-1517048676732-d65bc937f952?w=800" }
         ];
 
         const divisionsData = {
-            1: { name: "Research & Tech", desc: "Focuses on innovative research and latest technology in agro-industry.", icon: "fa-microscope", color: "text-blue-600" },
-            2: { name: "Human Resource Dev", desc: "Managing HR capacity through training.", icon: "fa-users", color: "text-green-600" },
-            3: { name: "Info & Communication", desc: "Dissemination hub and social media management.", icon: "fa-bullhorn", color: "text-purple-600" },
-            4: { name: "Talent & Interest", desc: "Place for art and sports talents.", icon: "fa-paint-brush", color: "text-red-600" },
-            5: { name: "External Relations", desc: "Building strategic relationships.", icon: "fa-handshake", color: "text-yellow-600" },
-            6: { name: "Entrepreneurship", desc: "Encouraging financial independence.", icon: "fa-lightbulb", color: "text-orange-600" },
-            7: { name: "Student Welfare", desc: "Ensuring well-being and advocacy.", icon: "fa-heart", color: "text-pink-600" },
-            8: { name: "Social Service", desc: "Social service and community empowerment.", icon: "fa-earth-asia", color: "text-teal-600" }
+            1: { 
+                name: "Research & Development", 
+                shortDesc: "Driving scientific excellence and technological breakthrough in the agro-industrial sector through continuous innovation and research.",
+                progs: [
+                    { title: "TIN Innovation Lab", desc: "A creative playground for students to experiment with bio-based products and manufacturing optimization.", img: "https://images.unsplash.com/photo-1581093458791-9f302e683800?w=1000" },
+                    { title: "Agro-Digital Summit", desc: "International forum connecting industry experts with academic researchers to discuss the future of Agriculture 5.0.", img: "https://images.unsplash.com/photo-1558444479-c8f01052877a?w=1000" },
+                    { title: "Scientific Incubation", desc: "Mentorship program designed to turn student research papers into publishable scientific journals.", img: "https://images.unsplash.com/photo-1532187863486-abf9d39d9995?w=1000" }
+                ]
+            }
         };
 
+        // Render Division Cards
         const scrollContainer = document.getElementById('scrollContainer');
-        scrollContainer.innerHTML = divisions.map(div => `
-            <div onclick="openDivision(${div.id})" class="division-card flex-none w-[300px] h-[450px] rounded-3xl overflow-hidden relative group cursor-pointer shadow-xl bg-gray-200">
-                <div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110" style="background-image: url('${div.img}');"></div>
-                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
-                <div class="absolute bottom-0 p-8 text-white w-full">
-                    <span class="text-xs font-bold tracking-widest uppercase text-yellow-400 mb-2 block">Division 0${div.id}</span>
-                    <h3 class="text-2xl font-bold font-heading">${div.name}</h3>
-                    <div class="h-1 w-12 bg-yellow-400 mt-4 transition-all duration-500 group-hover:w-full"></div>
-                </div>
-            </div>
-        `).join('');
-
-        // Generate Auditorium Seats
-        function generateSeats() {
-            const grid = document.getElementById('cinema-grid');
-            let html = '';
-            
-            // Generate 15 rows
-            for (let i = 1; i <= 15; i++) {
-                const isGroupRow = i >= 4 && i <= 11;
-                const groupNum = isGroupRow ? i - 3 : null;
-                
-                html += `
-                    <div class="flex items-center gap-6">
-                        <div class="w-20 text-right text-[10px] font-bold text-gray-600 uppercase">
-                            Baris ${i}
-                        </div>
-                        <div class="flex gap-2">
-                            ${Array(12).fill(0).map(() => `<div class="seat ${isGroupRow ? 'bg-red-700' : 'bg-gray-800'}"></div>`).join('')}
-                        </div>
-                        <div class="w-32 text-left">
-                            ${isGroupRow ? `<span class="bg-red-900/40 text-red-400 text-[10px] px-3 py-1 rounded-full border border-red-700/50 font-bold uppercase tracking-wider">Kelompok ${groupNum}</span>` : ''}
-                        </div>
+        scrollContainer.innerHTML = divisions.map(div => {
+            const safeImg = formatGDriveUrl(div.img);
+            return `
+                <div onclick="openDivision(${div.id})" class="division-card flex-none w-[340px] h-[500px] rounded-[3rem] overflow-hidden relative group cursor-pointer shadow-xl bg-gray-200">
+                    <div class="absolute inset-0 bg-cover bg-center transition-transform duration-1000 group-hover:scale-110" style="background-image: url('${safeImg}');"></div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+                    <div class="absolute bottom-0 p-10 text-white w-full">
+                        <h3 class="text-2xl font-bold font-heading uppercase tracking-wide">${div.name}</h3>
+                        <div class="h-1 w-12 bg-ipb-yellow mt-4 transition-all duration-500 group-hover:w-full"></div>
                     </div>
-                `;
-            }
-            grid.innerHTML = html;
-        }
-
-        // Form Submission Logic
-        document.getElementById('registrationForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            // Show Success Overlay
-            document.getElementById('success-overlay').classList.remove('hidden');
-            // Scroll to form if needed
-            document.getElementById('register').scrollIntoView();
-        });
-
-        function openAuditorium() {
-            const main = document.getElementById('main-content');
-            const aud = document.getElementById('auditorium-layout');
-            const nav = document.getElementById('navbar');
-            
-            main.classList.add('page-hidden');
-            nav.classList.add('-translate-y-full'); // Hide Navbar
-            
-            setTimeout(() => {
-                main.style.display = 'none';
-                aud.style.display = 'block';
-                generateSeats();
-                setTimeout(() => aud.classList.remove('page-hidden'), 50);
-                window.scrollTo(0, 0);
-            }, 500);
-        }
+                </div>
+            `;
+        }).join('');
 
         function openDivision(id) {
-            const data = divisionsData[id];
-            const main = document.getElementById('main-content');
-            const detail = document.getElementById('division-detail');
+            const data = divisionsData[id] || { 
+                name: divisions.find(d => d.id === id).name, 
+                shortDesc: "Leading the community toward excellence through strategic innovation and collaborative growth.",
+                progs: [
+                    { title: "Flagship Program One", desc: "Transformative initiative focusing on core department goals for this academic year.", img: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1000" },
+                    { title: "Digital Optimization", desc: "Integrating modern technology to streamline internal processes and public communication.", img: "https://images.unsplash.com/photo-1552664730-d307ca884978?w=1000" },
+                    { title: "Legacy Outreach", desc: "Ensuring our department provides a lasting positive impact on the agroindustrial community.", img: "https://images.unsplash.com/photo-1517048676732-d65bc937f952?w=1000" }
+                ]
+            };
+
             const content = document.getElementById('detail-content');
-            content.innerHTML = `
-                <div class="reveal active">
-                    <div class="w-20 h-20 ${data.color} bg-gray-50 rounded-2xl flex items-center justify-center text-4xl mb-6 shadow-sm">
-                        <i class="fas ${data.icon}"></i>
+            
+            let programsHtml = data.progs.map((prog, idx) => {
+                const isEven = idx % 2 !== 0;
+                const imgUrl = formatGDriveUrl(prog.img);
+                
+                return `
+                <div class="program-container mb-40 reveal-apple">
+                    <div class="program-image-wrapper">
+                        <img src="${imgUrl}" alt="${prog.title}">
                     </div>
-                    <h1 class="font-heading text-5xl font-extrabold text-ipb-blue mb-6">${data.name}</h1>
-                    <div class="p-8 bg-gray-50 rounded-3xl border border-gray-100 mb-8">
-                        <h3 class="text-xl font-bold mb-4">Brief Description</h3>
-                        <p class="text-gray-600 leading-relaxed text-lg">${data.desc}</p>
+                    <div class="max-w-xl mx-auto mt-[-80px] md:mt-[-120px] px-4">
+                        <div class="bg-white p-10 rounded-[2.5rem] shadow-2xl border border-gray-100 text-float ${isEven ? 'text-float-right' : 'text-float-left'}">
+                            <span class="text-ipb-yellow font-black tracking-widest uppercase text-[10px]">PROGRAM 0${idx+1}</span>
+                            <h3 class="text-3xl font-extrabold text-ipb-blue mt-2 mb-4 leading-tight">${prog.title}</h3>
+                            <p class="text-gray-600 leading-relaxed text-lg font-medium">${prog.desc}</p>
+                        </div>
                     </div>
                 </div>`;
-            main.classList.add('page-hidden');
-            setTimeout(() => {
-                main.style.display = 'none';
-                detail.style.display = 'block';
-                setTimeout(() => detail.classList.remove('page-hidden'), 50);
-                window.scrollTo(0, 0);
-            }, 500);
+            }).join('');
+
+            content.innerHTML = `
+                <div class="mb-24 reveal-apple active">
+                    <h1 class="font-heading text-5xl md:text-8xl font-black text-ipb-blue mb-8 uppercase tracking-tighter">${data.name}</h1>
+                    <p class="text-2xl text-gray-500 max-w-3xl font-medium italic border-l-8 border-ipb-yellow pl-8 leading-relaxed">${data.shortDesc}</p>
+                </div>
+                <div class="mb-20 reveal-apple active">
+                    <div class="text-center mb-24">
+                        <h2 class="text-4xl font-black text-gray-900 uppercase tracking-widest inline-block border-b-8 border-ipb-yellow pb-2">Work Programs</h2>
+                    </div>
+                    ${programsHtml}
+                </div>
+            `;
+
+            switchPage('division-detail');
+            setTimeout(setupRevealObserver, 100);
+        }
+
+        // --- Core Page Logic ---
+
+        function switchPage(pageId) {
+            const pages = ['main-content', 'division-detail', 'auditorium-layout'];
+            pages.forEach(p => {
+                const el = document.getElementById(p);
+                if(p === pageId) {
+                    el.style.display = 'block';
+                    setTimeout(() => el.classList.remove('page-hidden'), 50);
+                } else {
+                    el.classList.add('page-hidden');
+                    el.style.display = 'none';
+                }
+            });
+            window.scrollTo({ top: 0, behavior: 'instant' });
         }
 
         function goHome() {
-            const main = document.getElementById('main-content');
-            const detail = document.getElementById('division-detail');
-            const aud = document.getElementById('auditorium-layout');
-            const nav = document.getElementById('navbar');
-            
-            detail.classList.add('page-hidden');
-            aud.classList.add('page-hidden');
-            
-            setTimeout(() => {
-                detail.style.display = 'none';
-                aud.style.display = 'none';
-                main.style.display = 'block';
-                nav.classList.remove('-translate-y-full');
-                setTimeout(() => {
-                    main.classList.remove('page-hidden');
-                    reveal();
-                }, 50);
-            }, 500);
+            switchPage('main-content');
+            setTimeout(reveal, 100);
+        }
+
+        function setupRevealObserver() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                    }
+                });
+            }, { threshold: 0.15 });
+
+            document.querySelectorAll('.reveal-apple').forEach(el => observer.observe(el));
         }
 
         function reveal() {
-            document.querySelectorAll(".reveal").forEach(el => {
-                if (el.getBoundingClientRect().top < window.innerHeight - 100) el.classList.add("active");
+            document.querySelectorAll(".reveal-apple").forEach(el => {
+                if (el.getBoundingClientRect().top < window.innerHeight - 50) el.classList.add("active");
             });
         }
 
+        // Initialize and process all images/backgrounds on load
+        window.onload = () => {
+            // Process Hero Background
+            const heroBg = document.getElementById('hero-bg');
+            const bgUrl = formatGDriveUrl(heroBg.getAttribute('data-bg'));
+            if (bgUrl) heroBg.style.backgroundImage = `url('${bgUrl}')`;
+
+            // Process Main Logo
+            const logo = document.getElementById('main-logo');
+            const logoUrl = formatGDriveUrl(logo.getAttribute('data-src'));
+            if (logoUrl) logo.src = logoUrl;
+
+            // Process all static gdrive-img class
+            document.querySelectorAll('.gdrive-img').forEach(img => {
+                const src = formatGDriveUrl(img.getAttribute('data-src'));
+                if (src) img.src = src;
+            });
+
+            reveal();
+            setupRevealObserver();
+        };
+
         window.addEventListener("scroll", reveal);
-        window.onload = () => { initImages(); reveal(); };
-        scrollContainer.addEventListener('scroll', () => {
-            const max = scrollContainer.scrollWidth - scrollContainer.clientWidth;
-            if(max > 0) document.getElementById('scrollBar').style.width = (scrollContainer.scrollLeft / max * 100) + '%';
+
+        document.getElementById('registrationForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            document.getElementById('success-overlay').classList.remove('hidden');
         });
+
+        function openAuditorium() {
+            switchPage('auditorium-layout');
+            const grid = document.getElementById('cinema-grid');
+            grid.innerHTML = Array(12).fill(0).map((_, i) => `
+                <div class="flex gap-3">
+                    ${Array(14).fill(0).map(() => `<div class="seat bg-red-900 w-6 h-6 rounded-t-lg shadow-inner"></div>`).join('')}
+                </div>
+            `).join('');
+        }
     </script>
 </body>
 </html>
