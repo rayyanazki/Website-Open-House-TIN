@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="id" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -19,15 +19,8 @@
             theme: {
                 extend: {
                     colors: {
-                        ipb: {
-                            blue: '#003666', 
-                            yellow: '#FFC72C', 
-                            dark: '#1a1a1a',
-                        },
-                        tin: {
-                            green: '#2E8B57', 
-                            light: '#F0FFF4'
-                        }
+                        ipb: { blue: '#003666', yellow: '#FFC72C', dark: '#1a1a1a' },
+                        tin: { green: '#2E8B57', light: '#F0FFF4' }
                     },
                     fontFamily: {
                         sans: ['Open Sans', 'sans-serif'],
@@ -39,122 +32,138 @@
     </script>
 
     <style>
-        .hero-overlay {
-            background: linear-gradient(rgba(0, 54, 102, 0.75), rgba(0, 54, 102, 0.4));
-        }
-        
-        .glass-card {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
+        .hero-overlay { background: linear-gradient(rgba(51, 123, 61, 0.8), rgba(0, 54, 102, 0.4)); }
+        .glass-card { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.2); }
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-        /* Apple-style Reveal Interaction */
         .reveal-apple {
             opacity: 0;
-            transform: translateY(40px) scale(0.98);
-            transition: opacity 1.2s cubic-bezier(0.21, 0.6, 0.35, 1), 
-                        transform 1.2s cubic-bezier(0.21, 0.6, 0.35, 1);
-            will-change: opacity, transform;
+            transform: translateY(30px) scale(0.95);
+            transition: all 0.8s cubic-bezier(0.15, 0, 0.15, 1);
         }
-        .reveal-apple.active {
+        .reveal-apple.active { 
+            opacity: 1; 
+            transform: translateY(0) scale(1); 
+        }
+
+        .card-pop {
+            opacity: 0;
+            transform: scale(0.9) translateY(20px);
+            transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .card-pop.active {
             opacity: 1;
-            transform: translateY(0) scale(1);
+            transform: scale(1) translateY(0);
         }
 
         .division-card {
-            transition: transform 0.6s cubic-bezier(0.2, 1, 0.2, 1), box-shadow 0.6s ease;
+            transition: all 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+            will-change: transform, box-shadow;
         }
         .division-card:hover {
-            transform: scale(1.03);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
-        }
-
-        .page-hidden {
-            display: none;
-            opacity: 0;
-        }
-
-        /* Stacked Scroll Layout Styles */
-        .program-container {
-            position: relative;
-            padding-bottom: 5vh;
-        }
-        .program-image-wrapper {
-            width: 100%;
-            max-width: 850px;
-            margin: 0 auto;
-            border-radius: 2.5rem;
-            overflow: hidden;
+            transform: translateY(-15px) scale(1.02);
             box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.25);
-            aspect-ratio: 16 / 9;
-            background: #f3f4f6;
         }
-        .program-image-wrapper img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+
+        .page-container { display: none; opacity: 0; transform: translateY(10px); transition: all 0.5s ease-out; }
+        .page-container.active { display: block; opacity: 1; transform: translateY(0); }
+
+        .nav-dropdown {
+            display: none; position: absolute; top: 100%; left: 0; 
+            background: white; min-width: 240px; border-radius: 1.5rem;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1); border: 1px solid rgba(0,0,0,0.05);
+            padding: 1rem 0; z-index: 100;
         }
-        .text-float {
-            position: relative;
-            z-index: 20;
+        .nav-item-container:hover .nav-dropdown { display: block; }
+
+        .program-container { position: relative; margin-bottom: 12rem; }
+        .program-image-wrapper {
+            width: 100%; max-width: 900px; margin: 0 auto; border-radius: 3rem;
+            overflow: hidden; box-shadow: 0 40px 80px -15px rgba(0, 0, 0, 0.3);
+            aspect-ratio: 16 / 9; background: #f3f4f6;
         }
+        .program-image-wrapper img { width: 100%; height: 100%; object-fit: cover; }
+        
         @media (min-width: 768px) {
             .text-float-left { transform: translateX(-15%); margin-right: auto; }
             .text-float-right { transform: translateX(15%); margin-left: auto; text-align: right; }
         }
 
-        /* Seat Styles */
-        .seat {
-            width: 24px;
-            height: 24px;
-            background-color: #991b1b;
-            border-radius: 4px 4px 8px 8px;
-            position: relative;
+        .seat { width: 18px; height: 18px; border-radius: 4px; flex-shrink: 0; }
+        .seat-vip { background-color: #be123c; } 
+        .seat-group { background-color: #0891b2; } 
+        .seat-regular { background-color: #3f3f46; } 
+        
+        .screen-curve {
+            height: 12px; width: 70%; background: linear-gradient(to bottom, #ffffff, #94a3b8); border-radius: 50%;
+            box-shadow: 0 10px 30px rgba(255, 255, 255, 0.2);
         }
+
+        .row-label { font-size: 10px; font-weight: 700; color: #71717a; width: 100px; text-align: right; }
+
+        /* Loading Spinner */
+        .spinner {
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top: 3px solid #fff;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
 <body class="font-sans text-gray-800 antialiased bg-gray-50 overflow-x-hidden">
 
     <!-- Navigation -->
-    <nav class="fixed w-full z-50 bg-white/90 backdrop-blur-md shadow-sm transition-all duration-300" id="navbar">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-20">
-                <div class="flex-shrink-0 flex items-center gap-3 cursor-pointer" onclick="goHome()">
-                    <div class="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center overflow-hidden border border-gray-100 shadow-sm">
-                        <!-- Input Link Logo Google Drive Disini -->
-                        <img id="main-logo" data-src="https://upload.wikimedia.org/wikipedia/id/thumb/0/0e/Logo_IPB.svg/1200px-Logo_IPB.svg.png" src="" alt="IPB Logo" class="w-full h-full object-contain p-1">
-                    </div>
-                    <div>
-                        <span class="font-heading font-bold text-lg text-ipb-blue block leading-none">Open House TIN</span>
-                        <span class="text-[10px] text-gray-500 font-semibold tracking-wide uppercase">Agroindustrial Technology</span>
-                    </div>
+    <nav class="fixed w-full z-50 bg-white/95 backdrop-blur-md shadow-sm h-20 flex items-center">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full flex justify-between items-center">
+            <div class="flex items-center gap-3 cursor-pointer" onclick="switchPage('main-landing')">
+                <div class="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center overflow-hidden border border-gray-100 shadow-sm">
+                    <img src="logo ipbaaa.png" alt="IPB Logo" class="w-full h-full object-contain p-1" onerror="this.src='https://via.placeholder.com/50'">
                 </div>
+                <div>
+                    <span class="font-heading font-bold text-lg text-ipb-blue block leading-none">Open House TIN</span>
+                    <span class="text-[10px] text-gray-500 font-semibold tracking-wide uppercase leading-none">Agroindustrial Technology</span>
+                </div>
+            </div>
 
-                <div class="hidden md:flex items-center space-x-8">
-                    <a href="javascript:void(0)" onclick="goHome()" class="text-gray-600 hover:text-ipb-blue font-semibold transition">Home</a>
-                    <a href="#about" class="text-gray-600 hover:text-ipb-blue font-semibold transition">About</a>
-                    <a href="#himalogin" class="text-gray-600 hover:text-ipb-blue font-semibold transition">Himalogin</a>
-                    <a href="#register" class="px-6 py-2.5 bg-ipb-blue text-white font-bold rounded-full hover:bg-blue-800 transition transform hover:scale-105 shadow-lg">Register Now</a>
+            <div class="hidden md:flex items-center space-x-8 h-full">
+                <div class="nav-item-container relative h-full flex items-center group">
+                    <button class="text-ipb-blue hover:text-blue-800 font-bold flex items-center gap-2 py-8">
+                        Home <i class="fas fa-chevron-down text-xs transition-transform group-hover:rotate-180"></i>
+                    </button>
+                    <div class="nav-dropdown">
+                        <a href="javascript:void(0)" onclick="switchPage('main-landing')" class="block px-6 py-3 text-sm font-semibold text-gray-700 hover:bg-gray-50 hover:text-ipb-blue">
+                            <i class="fas fa-home mr-3 opacity-50"></i> Landing Page
+                        </a>
+                        <a href="javascript:void(0)" onclick="switchPage('page-courses')" class="block px-6 py-3 text-sm font-semibold text-gray-700 hover:bg-gray-50 hover:text-ipb-blue">
+                            <i class="fas fa-book-open mr-3 opacity-50"></i> Mata Kuliah
+                        </a>
+                        <!-- Link Google Sheets Section -->
+                        <div class="border-t border-gray-100 mt-2 pt-2">
+                             
+                             
+                        </div>
+                    </div>
                 </div>
-                <div class="md:hidden">
-                    <button class="text-gray-600"><i class="fas fa-bars text-2xl"></i></button>
-                </div>
+                <a href="#about" class="text-gray-600 hover:text-ipb-blue font-semibold transition">About</a>
+                <a href="javascript:void(0)" onclick="goBackToDepartments()">Himalogin</a>
+                <a href="#register" class="px-6 py-2.5 bg-ipb-blue text-white font-bold rounded-full hover:bg-blue-800 transition transform hover:scale-105 shadow-lg">Register Now</a>
             </div>
         </div>
     </nav>
 
-    <!-- MAIN CONTENT -->
-    <main id="main-content">
+    <!-- PAGE 1: MAIN LANDING -->
+    <div id="main-landing" class="page-container active">
         <!-- Hero Section -->
         <section id="home" class="min-h-screen flex items-center justify-center pt-20 relative overflow-hidden bg-ipb-blue">
-            <!-- Input Link Background Hero Google Drive Disini -->
-            <div id="hero-bg" class="absolute inset-0 z-0 bg-cover bg-center" data-bg="MASUKKAN_URL_GOOGLE_DRIVE_BACKGROUND_HERO_DISINI"></div>
+            <div id="hero-bg" class="absolute inset-0 z-0 bg-cover bg-center" style="background-image: url('WhatsApp Image 2026-02-10 at 8.58.49 PM.jpeg');"></div>
             <div class="absolute inset-0 hero-overlay z-0"></div>
-            
             <div class="container mx-auto px-4 text-center text-white z-10 relative">
                 <h1 class="font-heading text-4xl md:text-6xl lg:text-7xl font-extrabold mb-6 leading-tight reveal-apple">
                     Agroindustry Innovation<br>
@@ -163,39 +172,42 @@
                 <p class="text-lg md:text-xl text-gray-200 mb-10 max-w-2xl mx-auto font-light italic reveal-apple">"Transforming Agriculture into Sustainable Industry"</p>
                 <div class="flex flex-col sm:flex-row justify-center gap-4 reveal-apple">
                     <a href="#register" class="px-8 py-4 bg-yellow-500 text-ipb-blue font-bold rounded-full hover:bg-yellow-400 transition shadow-lg">Get Tickets</a>
-                    <a href="#about" class="px-8 py-4 bg-transparent border-2 border-white text-white font-bold rounded-full hover:bg-white hover:text-ipb-blue transition">Explore</a>
+                    <a href="javascript:void(0)" onclick="switchPage('page-courses')" class="px-8 py-4 bg-transparent border-2 border-white text-white font-bold rounded-full hover:bg-white hover:text-ipb-blue transition">Explore Info</a>
                 </div>
             </div>
         </section>
 
-        <!-- About Section (Why TIN?) -->
-        <section id="about" class="py-24 bg-white">
+        <!-- About Section -->
+        <section id="about" class="py-32 bg-white">
             <div class="container mx-auto px-4">
                 <div class="text-center mb-20 reveal-apple">
                     <h2 class="font-heading text-5xl font-extrabold text-gray-900 mb-6 uppercase tracking-tight">Why <span class="text-ipb-blue">TIN?</span></h2>
                     <div class="w-24 h-2 bg-ipb-yellow mx-auto mb-8 rounded-full"></div>
-                    <p class="text-gray-600 max-w-4xl mx-auto text-xl leading-relaxed font-medium">
-                        Departemen Teknologi Industri Pertanian (TIN) IPB University merupakan pionir dalam pengembangan nilai tambah komoditas pertanian melalui integrasi teknologi proses, manajemen sistem industri, dan teknik lingkungan. Kami mencetak inovator yang mampu mengubah tantangan pangan global menjadi peluang industri berkelanjutan.
-                    </p>
+                    <p class="text-gray-600 max-w-4xl mx-auto text-xl leading-relaxed font-medium italic">"Agroindustry is a sector that integrates agriculture with technology, innovation, and management to process agricultural resources into high-value products that support economic growth and sustainable development."</p>
                 </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-10 reveal-apple">
-                    <div class="group overflow-hidden rounded-[2.5rem] shadow-2xl aspect-[4/5] relative bg-gray-100 border border-gray-100">
-                        <img data-src="https://images.unsplash.com/photo-1581093458791-9f302e683800?q=80&w=1000" src="" alt="Agro-Lab" class="gdrive-img w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110">
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity p-8 flex items-end">
-                            <p class="text-white font-bold text-lg text-center w-full">Advanced Laboratory</p>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+                    <div class="reveal-apple" style="transition-delay: 100ms;">
+                        <div class="group overflow-hidden rounded-[3rem] shadow-2xl aspect-[4/5] relative bg-gray-100">
+                            <img src="WhatsApp Image 2026-02-10 at 10.03.53 PM.jpeg" alt="Agro-Lab" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent flex items-end p-10">
+                                <p class="text-white font-bold text-lg text-center w-full uppercase tracking-widest">Computer Lab</p>
+                            </div>
                         </div>
                     </div>
-                    <div class="group overflow-hidden rounded-[2.5rem] shadow-2xl aspect-[4/5] relative bg-gray-100 border border-gray-100">
-                        <img data-src="https://images.unsplash.com/photo-1581092160562-40aa08e78837?q=80&w=1000" src="" alt="Process Tech" class="gdrive-img w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110">
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity p-8 flex items-end">
-                            <p class="text-white font-bold text-lg text-center w-full">Process Technology</p>
+                    <div class="reveal-apple" style="transition-delay: 200ms;">
+                        <div class="group overflow-hidden rounded-[3rem] shadow-2xl aspect-[4/5] relative bg-gray-100">
+                            <img src="aset 2.jpeg" alt="Process Tech" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent flex items-end p-10">
+                                <p class="text-white font-bold text-lg text-center w-full uppercase tracking-widest">CCF Room</p>
+                            </div>
                         </div>
                     </div>
-                    <div class="group overflow-hidden rounded-[2.5rem] shadow-2xl aspect-[4/5] relative bg-gray-100 border border-gray-100">
-                        <img data-src="https://images.unsplash.com/photo-1532187863486-abf9d39d9995?q=80&w=1000" src="" alt="Bio-Energy" class="gdrive-img w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110">
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity p-8 flex items-end">
-                            <p class="text-white font-bold text-lg text-center w-full">Bio-Industrial System</p>
+                    <div class="reveal-apple" style="transition-delay: 300ms;">
+                        <div class="group overflow-hidden rounded-[3rem] shadow-2xl aspect-[4/5] relative bg-gray-100">
+                            <img src="lab dit.jpeg" alt="Bio-Energy" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent flex items-end p-10">
+                                <p class="text-white font-bold text-lg text-center w-full uppercase tracking-widest">Bio-Industrial Lab</p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -203,268 +215,424 @@
         </section>
 
         <!-- Himalogin Section -->
-        <section id="himalogin" class="py-24 bg-gray-50 overflow-hidden">
-            <div class="container mx-auto px-4 mb-12 reveal-apple">
-                <h2 class="font-heading text-4xl font-bold text-center mb-4 uppercase">Himalogin Departments</h2>
-                <p class="text-gray-500 text-center max-w-xl mx-auto italic font-medium">Click on a card to discover our specific work programs.</p>
+        <section id="himalogin" class="py-32 bg-gray-50 overflow-hidden">
+            <div class="container mx-auto px-4 mb-12 reveal-apple text-center">
+                <h2 class="font-heading text-4xl font-bold mb-4 uppercase">Himalogin Departments</h2>
+                <p class="text-gray-500 italic font-medium">Click here for work program details.</p>
             </div>
-            <div class="flex overflow-x-auto py-10 px-8 gap-8 hide-scrollbar cursor-grab active:cursor-grabbing reveal-apple" id="scrollContainer">
-                <!-- Cards generated via JS -->
-            </div>
+            <div class="flex overflow-x-auto py-10 px-8 gap-10 hide-scrollbar cursor-grab active:cursor-grabbing" id="scrollContainer"></div>
         </section>
 
         <!-- Register Section -->
-        <section id="register" class="py-24 bg-ipb-blue text-white">
-            <div class="container mx-auto px-4 max-w-4xl reveal-apple">
-                <div class="glass-card p-10 md:p-14 rounded-[3rem] text-gray-800 relative shadow-2xl">
-                    <div id="success-overlay" class="absolute inset-0 bg-white/98 rounded-[3rem] z-20 flex flex-col items-center justify-center p-8 text-center hidden">
+        <section id="register" class="py-32 bg-white">
+            <div class="container mx-auto px-4 max-w-5xl reveal-apple">
+                <div class="glass-card p-10 md:p-14 rounded-[4rem] text-gray-800 relative shadow-2xl border-gray-100">
+                    
+                    <!-- Overlay Success -->
+                    <div id="success-overlay" class="absolute inset-0 bg-white/98 rounded-[4rem] z-20 flex flex-col items-center justify-center p-8 text-center hidden">
                         <i class="fas fa-check-circle text-7xl text-green-500 mb-6"></i>
-                        <h3 class="text-3xl font-bold text-ipb-blue mb-2">Registration Complete!</h3>
-                        <p class="text-gray-500 mb-8">You are now part of our journey. Let's explore the venue!</p>
-                        <button onclick="openAuditorium()" class="px-10 py-4 bg-ipb-blue text-white font-bold rounded-full shadow-lg hover:scale-105 transition">Explore Layout</button>
+                        <h3 class="text-3xl font-bold text-ipb-blue mb-2 uppercase">Pendaftaran Berhasil!</h3>
+                        <p class="text-gray-500 mb-8 font-medium italic">Data Anda telah tersimpan ke database Google Sheets. Silakan cek posisi duduk kelompok Anda di venue.</p>
+                        <div class="flex flex-col sm:flex-row gap-4">
+                            <button onclick="openAuditorium()" class="px-10 py-4 bg-ipb-blue text-white font-bold rounded-full shadow-lg hover:scale-105 transition uppercase tracking-widest text-sm">Cek Layout Venue</button>
+                            <button onclick="resetForm()" class="px-10 py-4 bg-gray-100 text-gray-600 font-bold rounded-full hover:bg-gray-200 transition uppercase tracking-widest text-sm">Daftar Lagi</button>
+                        </div>
                     </div>
-                    <div class="text-center mb-12">
-                        <h2 class="text-4xl font-extrabold text-ipb-blue mb-2">Ready to Join?</h2>
-                        <p class="text-gray-400 italic font-medium">"Your future in Agroindustry starts here"</p>
+                    
+                    <div class="text-center mb-10">
+                        <h2 class="text-3xl font-black text-ipb-blue uppercase">Register Your Spot</h2>
+                        <p class="text-gray-400 font-medium text-sm italic mt-2">Isi form di bawah untuk mendaftar dan mendapatkan akses venue.</p>
                     </div>
-                    <form id="registrationForm" class="grid md:grid-cols-2 gap-8">
-                        <div class="space-y-2">
-                            <label class="text-xs font-bold uppercase tracking-widest text-gray-500 ml-1">Full Name</label>
-                            <input type="text" placeholder="John Doe" required class="w-full px-5 py-4 rounded-2xl border border-gray-200 focus:ring-2 focus:ring-ipb-blue outline-none transition">
+
+                    <!-- PENTING: Untuk Google Sheets, pastikan atribut 'name' sesuai dengan header di Sheet Anda -->
+                    <form id="registrationForm" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <div class="space-y-1">
+                            <label class="text-[10px] font-bold uppercase text-gray-400 ml-2 tracking-widest">Nama Lengkap</label>
+                            <input name="nama" type="text" placeholder="Nama Anda" required class="w-full px-5 py-4 rounded-2xl border border-gray-100 bg-gray-50 focus:bg-white focus:ring-2 focus:ring-ipb-blue transition outline-none">
                         </div>
-                        <div class="space-y-2">
-                            <label class="text-xs font-bold uppercase tracking-widest text-gray-500 ml-1">Email</label>
-                            <input type="email" placeholder="john@email.com" required class="w-full px-5 py-4 rounded-2xl border border-gray-200 focus:ring-2 focus:ring-ipb-blue outline-none transition">
+                        <div class="space-y-1">
+                            <label class="text-[10px] font-bold uppercase text-gray-400 ml-2 tracking-widest">Nim</label>
+                            <input name="sekolah" type="text" placeholder="F34" required class="w-full px-5 py-4 rounded-2xl border border-gray-100 bg-gray-50 focus:bg-white focus:ring-2 focus:ring-ipb-blue transition outline-none">
                         </div>
-                        <div class="space-y-2">
-                            <label class="text-xs font-bold uppercase tracking-widest text-gray-500 ml-1">WhatsApp</label>
-                            <input type="tel" placeholder="0812..." required class="w-full px-5 py-4 rounded-2xl border border-gray-200 focus:ring-2 focus:ring-ipb-blue outline-none transition">
+                        <div class="space-y-1">
+                            <label class="text-[10px] font-bold uppercase text-gray-400 ml-2 tracking-widest">Email</label>
+                            <input name="email" type="email" placeholder="email@anda.com" required class="w-full px-5 py-4 rounded-2xl border border-gray-100 bg-gray-50 focus:bg-white focus:ring-2 focus:ring-ipb-blue transition outline-none">
                         </div>
-                        <div class="space-y-2">
-                            <label class="text-xs font-bold uppercase tracking-widest text-gray-500 ml-1">School</label>
-                            <input type="text" placeholder="SMA / SMK / Univ" required class="w-full px-5 py-4 rounded-2xl border border-gray-200 focus:ring-2 focus:ring-ipb-blue outline-none transition">
+                        <div class="space-y-1">
+                            <label class="text-[10px] font-bold uppercase text-gray-400 ml-2 tracking-widest">WA</label>
+                            <input name="whatsapp" type="tel" placeholder="08..." required class="w-full px-5 py-4 rounded-2xl border border-gray-100 bg-gray-50 focus:bg-white focus:ring-2 focus:ring-ipb-blue transition outline-none">
                         </div>
-                        <button type="submit" class="md:col-span-2 w-full bg-ipb-blue text-white font-bold py-5 rounded-2xl hover:bg-blue-900 shadow-xl transition transform active:scale-95">Complete Registration</button>
+                        <button type="submit" id="btn-submit" class="lg:col-span-4 w-full bg-ipb-blue text-white font-bold py-5 rounded-3xl hover:bg-blue-900 shadow-xl transition mt-4 uppercase tracking-widest flex items-center justify-center">
+                            <span id="submit-text">Submit Registration</span>
+                        </button>
                     </form>
+                    
+                    <!-- Link Google Sheet untuk Admin (Placeholder) -->
+                    <div class="mt-8 text-center">
+                        <p class="text-[10px] text-gray-300 font-bold uppercase tracking-widest mb-2">Admin Only Resources</p>
+                        <a>
+
+                        </a> 
+                    </div>
                 </div>
             </div>
         </section>
-    </main>
 
-    <!-- DETAIL PAGE (STACKED SCROLL) -->
-    <div id="division-detail" class="page-hidden min-h-screen pt-32 pb-20 bg-white">
+        <!-- Footer -->
+        <footer class="bg-ipb-blue text-white py-20">
+            <div class="container mx-auto px-6 max-w-7xl">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-16 items-start reveal-apple">
+                    <div class="space-y-6 text-center md:text-left">
+                        <div class="flex items-center gap-4 justify-center md:justify-start">
+                             <div class="w-14 h-14 bg-white rounded-2xl flex items-center justify-center p-2 shadow-xl">
+                                <img src="logo ipbaaa.png" alt="IPB" class="w-full h-full object-contain">
+                             </div>
+                             <div class="text-left">
+                                 <h4 class="font-heading font-extrabold text-xl leading-none">OH TIN 2026</h4>
+                                 <span class="text-[10px] uppercase font-bold text-ipb-yellow tracking-[0.2em]">Agroindustry Future</span>
+                             </div>
+                        </div>
+                        <p class="text-gray-400 text-sm leading-relaxed max-w-xs mx-auto md:mx-0">Departemen Teknologi Industri Pertanian (TIN), Fakultas Teknologi Pertanian, IPB University.</p>
+                    </div>
+                    <div class="flex flex-col items-center gap-8 border-y md:border-y-0 md:border-x border-white/10 py-10 md:py-0">
+                        <div class="text-center">
+                            <h5 class="text-xs font-black uppercase tracking-[0.3em] text-white/40 mb-6 italic">Stay Connected</h5>
+                            <div class="flex gap-6 justify-center">
+                                <a href="https://instagram.com/himaloginipb" target="_blank" class="w-12 h-12 bg-white/5 rounded-full flex items-center justify-center hover:bg-pink-600 transition group">
+                                    <i class="fab fa-instagram text-xl"></i>
+                                </a>
+                                <a href="mailto:tin@apps.ipb.ac.id" class="w-12 h-12 bg-white/5 rounded-full flex items-center justify-center hover:bg-red-500 transition group">
+                                    <i class="far fa-envelope text-xl"></i>
+                                </a>
+                                <!-- Link Spreadsheet Button -->
+                                
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-center md:text-right space-y-4">
+                        <h5 class="text-xs font-black uppercase tracking-[0.3em] text-white/40 mb-4 italic">Secretariat</h5>
+                        <p class="text-sm text-gray-400">Gedung FATETA Lt. 2,<br>Kampus IPB Dramaga,<br>Bogor, Jawa Barat 16680</p>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- PAGE: DETAIL DIVISI -->
+    <div id="division-detail" class="page-container min-h-screen pt-32 pb-20 bg-white">
         <div class="container mx-auto px-4 max-w-6xl">
-            <button onclick="goHome()" class="mb-12 flex items-center gap-2 text-ipb-blue font-bold hover:gap-4 transition-all">
+            <button onclick="goBackToDepartments()"  
+                 class="mb-12 flex items-center gap-2 text-ipb-blue font-bold hover:gap-4 transition-all uppercase tracking-widest text-xs">
                 <i class="fas fa-arrow-left"></i> Back to Home
             </button>
             <div id="detail-content"></div>
         </div>
     </div>
 
-    <!-- AUDITORIUM PAGE -->
-    <div id="auditorium-layout" class="page-hidden min-h-screen pt-32 pb-20 bg-[#121212] text-white">
-        <div class="container mx-auto px-4 text-center">
-            <button onclick="goHome()" class="mb-10 text-gray-400 hover:text-white flex items-center gap-2 mx-auto"><i class="fas fa-arrow-left"></i> Back</button>
-            <h2 class="text-4xl font-extrabold text-red-600 mb-20 uppercase tracking-widest">Auditorium Venue</h2>
-            <div id="cinema-grid" class="flex flex-col items-center gap-6"></div>
+    <!-- PAGE: AUDITORIUM -->
+    <div id="auditorium-layout" class="page-container min-h-screen pt-32 pb-20 bg-[#0a0a0a] text-white">
+        <div class="container mx-auto px-4 text-center max-w-5xl">
+            <button onclick="switchPage('main-landing')" class="mb-10 text-gray-400 hover:text-white transition flex items-center gap-2 uppercase tracking-widest text-[10px] font-bold"><i class="fas fa-arrow-left"></i> Kembali ke Beranda</button>
+            <h2 class="text-4xl font-black text-white mb-2 uppercase tracking-[0.1em]">Venue Layout</h2>
+            <div class="bg-white/5 p-12 rounded-[4rem] border border-white/10 shadow-2xl relative overflow-x-auto">
+                <div class="flex flex-col items-center mb-16">
+                    <div class="screen-curve mb-4"></div>
+                    <p class="text-[10px] text-gray-500 uppercase font-bold tracking-[0.4em]">Main Stage Area</p>
+                </div>
+                <div class="inline-flex flex-col gap-3 min-w-[650px]" id="cinema-grid"></div>
+            </div>
         </div>
     </div>
 
-    <footer class="bg-ipb-dark text-gray-500 py-16 px-4">
-        <div class="max-w-6xl mx-auto text-center">
-            <h4 class="text-white font-bold mb-4 uppercase tracking-widest">Open House TIN IPB</h4>
-            <div class="flex justify-center gap-6 mb-8 text-xl">
-                <a href="#" class="hover:text-ipb-yellow transition"><i class="fab fa-instagram"></i></a>
-                <a href="#" class="hover:text-ipb-yellow transition"><i class="fab fa-linkedin"></i></a>
-            </div>
-            <p class="text-xs">&copy; 2026 IPB University - Agroindustrial Technology. All Rights Reserved.</p>
+    <!-- PAGE: COURSES -->
+    <div id="page-courses" class="page-container min-h-screen pt-32 pb-20 bg-white">
+        <div class="container mx-auto px-6 max-w-4xl text-center">
+             <button onclick="switchPage('main-landing')" class="mb-10 text-ipb-blue font-bold uppercase tracking-widest text-xs">Back</button>
+             <h2 class="text-4xl font-black text-ipb-blue mb-8 uppercase">Informasi Kurikulum</h2>
+             <div class="grid grid-cols-1 md:grid-cols-2 gap-8 text-left">
+                <div class="p-8 rounded-[2rem] bg-gray-50 border border-gray-100">
+                    <h4 class="font-bold text-ipb-blue uppercase text-xs mb-4 tracking-widest">Tahun 1-2</h4>
+                    <p class="text-sm text-gray-500">Fokus pada sains dasar, kalkulus, kimia organik, dan dasar-dasar keteknikan serta manajemen industri.</p>
+                </div>
+                <div class="p-8 rounded-[2rem] bg-gray-50 border border-gray-100">
+                    <h4 class="font-bold text-ipb-blue uppercase text-xs mb-4 tracking-widest">Tahun 3-4</h4>
+                    <p class="text-sm text-gray-500">Pendalaman pada teknologi proses, sistem produksi, pengendalian mutu, dan perancangan pabrik agroindustri.</p>
+                </div>
+             </div>
         </div>
-    </footer>
+    </div>
 
     <script>
-        // --- GDrive URL Support Helper ---
-        function formatGDriveUrl(url) {
-            if (!url || typeof url !== 'string') return url;
-            if (url.includes('MASUKKAN_URL')) return null;
-            
-            // Regex for various GDrive share links
-            const regex = /(?:\/d\/|id=)([\w-]+)/;
-            const match = url.match(regex);
-            
-            if (match && match[1]) {
-                // Return direct thumbnail/image link from GDrive
-                return `https://lh3.googleusercontent.com/u/0/d/${match[1]}`;
-            }
-            return url;
-        }
+        let lastScrollPosition = 0;
 
-        // Data Divisions (Semua link gambar diproses formatGDriveUrl di JS)
+        /**
+         * CONFIGURASI GOOGLE SHEETS
+         * Ganti URL_SCRIPT_WEB_APP dengan URL yang Anda dapatkan setelah Deploy Apps Script sebagai Web App.
+         */
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx4rOgxbAj8xSk_VBihC8F6B3vav8u0uf8kVTLoxp1fabK5AROQ9twgR-hswVbqql2t/exec'; 
+         
         const divisions = [
-            { id: 1, name: "Research & Tech", img: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800" },
-            { id: 2, name: "HRD", img: "https://images.unsplash.com/photo-1552664730-d307ca884978?w=800" },
-            { id: 3, name: "Info & Comm", img: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800" },
-            { id: 4, name: "Talent & Interest", img: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=800" },
-            { id: 5, name: "External", img: "https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=800" },
-            { id: 6, name: "Entrepreneur", img: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=800" },
-            { id: 7, name: "Student Welfare", img: "https://images.unsplash.com/photo-1454165833767-027ffcb71411?w=800" },
-            { id: 8, name: "Social Service", img: "https://images.unsplash.com/photo-1517048676732-d65bc937f952?w=800" }
+            { 
+                id: 1, 
+                name: "Internal", 
+                img: "inter.jpeg", 
+                progs: [
+                    { title: "SehaTin X Tindependence", desc: "Kegiatan olahraga bersama dan merayakan HUT RI bersama dengan bermain games bersama.", img: "dependencae.jpeg" },
+                    { title: "GraduaTIN", desc: "Pelepasan bagi wisudawan/wisudawati departemen TIN yang di sambut dan di rayakan oleh adik kelasnya.", img: "Screenshot 2026-02-11 225941.png" },
+                    { title: "Open House TIN", desc: "Memperkenalkan departemen TIN kepada mahasiswa TIN yang berada di PKU Khususnya.", img: "openhouse.jpg" }
+                ]
+            },
+            { 
+                id: 2, 
+                name: "Community Service and Development", 
+                img: "csd.jpeg",
+                progs: [
+                    { title: "HiCare", desc: "Wadah kepedulian dan pemberian bantuan kepada mahasiswa TIN yang sedang melangami musibah atau kondisi tertentu.", img: "hicare.jpeg" },
+                    { title: "PLantin", desc: "Proker unggulan CSD yg berorientasi pada pelestarian ekosistem tanaman mangrove serta pemberdayaan masyrakat pesisir.", img: "mangrove.jpeg" },
+                    { title: "Community Dev X PPKO", desc: "Proker pemberdayaan Masyarakat melalui skema Bina Desa pada desa terpilih yang dilaksanakan  secara berkelanjutan selama satu periode kepengurusan .", img: "turlap.jpg" }
+                ]
+            },
+            { 
+                id: 3, 
+                name: "Human Resource and Development", 
+                img: "hred.jpeg",
+                progs: [
+                    { title: "Festival of Agroindustri", desc: "Rangkaian kegiatan berskala internasional yang berfokus mengembangkan pemahaman mengenai agroindustri, meliputi Seminar Nasional Agroindustri (Sentri), Agro Innovating Expo (AEI), dan Competition (IAC, NAC, NSAC)..", img: "FOA.JPG" },
+                    { title: "Forum Agroindustri", desc: "Kegiatan diskusi dan kajian isu-isu terkini di bidang agroindustri yang bertujuan untuk mengembangkan pemikiran kritis, kreativitas, serta kepedulian mahasiswa terhadap perkembangan agroindustri di Indonesia.", img: "forum.jpeg" },
+                    { title: "UpgradeTIN", desc: "Pengembangan skill profesional seluruh mahasiswa TIN berskala.", img: "upgradetin.jpeg" }
+                ]
+            },
+            { 
+                id: 4, 
+                name: "Academic and Student Achievement", 
+                img: "asa.jpeg",
+                progs: [
+                    { title: "Asamunisi", desc: "Sebuah proker dimana kumpulan-kumpulan materi dan catatan perkuliahan dari kating ataumahasiswa TIN semester sekarang", img: "tutorasa.jpg" },
+                    { title: "CompeTinon", desc: "Kegiatan berupa informasi lomba lomba khusus anak TIN yg akan di publish setiap awal bulan.", img: "competionon.jpeg" },
+                    { title: "Beasiswa Alumni TIN", desc: "Beasiswa Alumni TIN merupakan program dukungan pendidikan yang diinisiasi oleh alumni Teknologi Industri Pertanian (TIN) untuk membantu mahasiswa aktif TIN secara finansial sekaligus pengembangan kapasitas diri..", img: "mapresasa.JPG" }
+                ]
+            },
+            { 
+                id: 5, 
+                name: "Talent and Interest", 
+                img: "ti.jpeg",
+                progs: [
+                    { title: "SportiviTin", desc: "Program ini bertujuan untuk mempererat hubungan antar mahasiswa lintas angkatan, menumbuhkan semangat sportivitas, serta menjadi wadah penyaluran minat dan bakat di bidang olahraga.", img: "sporti4 1.png" },
+                    { title: "Tinclub", desc: "TIN Club merupakan program kerja yang menjadi wadah pengembangan dan pencarian bakat mahasiswa TIN di bidang olahraga dan seni. Kegiatan ini dilaksanakan secara rutin setiap bulan dengan tujuan menyalurkan minat dan bakat..", img: "tinsoc.jpeg" },
+                    { title: "FAC X Redscup", desc: "Ready to Redscup x FAC adalah program kerja yang berfokus pada pencarian, pembinaan, dan persiapan kontingen TIN FATETA IPB untuk berlaga dan bertanding pada event Redscup x FAC.", img: "fac.jpeg" }
+                ]
+            },
+            { 
+                id: 6, 
+                name: "Media Research and information", 
+                img: "mri.jpeg",
+                progs: [
+                    { title: "Majalah Industri", desc: "Publikasi berkala seputar agroindustri, liputan umkm dan media informatif lainnya.", img: "TITLE MIND.png" },
+                    { title: "Risetin", desc: "Penelitian mendalam mengenai kehidupan mahasiswa tin untuk media informatif dan entertainment.", img: "riset.jpeg" },
+                    { title: "LOg-in", desc: "Sistem informasi yang didalamnya banyak fakta fakta seru seputar berkeheidupan di TIN", img: "ind.jpeg" }
+                ]
+            },
+            { 
+                id: 7, 
+                name: "Technopreneur", 
+                img: "tp.jpeg",
+                progs: [
+                    { title: "VisiTIN", desc: "Visitin berfokus pada pembelajaran secara langsung pada suatu agroindustri untuk diterapkan dalam kegiatan entrepreneurship.", img: "visit.jpeg" },
+                    { title: "ProducTin", desc: "Productin berperan dalam pembuatan suatu produk fungsional, mulai dari perancangan ide, eksekusi produksi, hingga tercipta produk yang memiliki nilai tambah", img: "productin.jpeg" },
+                    { title: "MarkeTin", desc: "Marketin adalah wadah untuk memperkenalkan dan membangun citra HIMALOGIN dan TIN melalui berbagai merchandise yang merepresentasikannya", img: "marketin.jpeg" }
+                ]
+            },
+            { 
+                id: 8, 
+                name: "Public Relation", 
+                img: "pr.jpeg",
+                progs: [
+                    { title: "Company Visit", desc: "Program kerja dimana mahasiswa TIN berkunjung ke beberapa perusahaan pangan ataupun non-pangan untuk media pembelajaran skala industri secara langsung.", img: "comvis.JPG" },
+                    { title: "Tinsight", desc: "Media informatif lewat standar Podcast max 10-15 min dengan isi content fokus terhadap akademik, jenjang karir bersama narasumber seperti Praktisi Agroindustri, Pelaku usaha Industri, Alumni TIN", img: "tinsight.jpeg" },
+                    { title: "Tinnovation", desc: "Promosi program studi in platform media sosial, Konsultan untuk mahasiswa dan siswa/siswi SMA sederajat.", img: "Tinnovation.jpeg" }
+                ]
+            },
+            {
+                id: 9, 
+                name: "Badan Pengawas", 
+                img: "DSC04747.JPG",
+                progs: [
+                    { title: "Sidang Awal Tahun", desc: "Penetapan rencana kerja satu periode kedepan.", img: "sidangawal.jpeg" },
+                    { title: "Pemira Himalogin", desc: "Pemilihan Raya ketua himpunan (Himalogin) yang baru.", img: "pemirahimal.jpeg" },
+                    { title: "Sidang Akhir Tahun", desc: "Evaluasi dan laporan pertanggungjawaban pengurus.", img: "WhatsApp Image 2026-02-10 at 7.52.53 PM.jpeg" }
+                ]
+            }
         ];
 
-        const divisionsData = {
-            1: { 
-                name: "Research & Development", 
-                shortDesc: "Driving scientific excellence and technological breakthrough in the agro-industrial sector through continuous innovation and research.",
-                progs: [
-                    { title: "TIN Innovation Lab", desc: "A creative playground for students to experiment with bio-based products and manufacturing optimization.", img: "https://images.unsplash.com/photo-1581093458791-9f302e683800?w=1000" },
-                    { title: "Agro-Digital Summit", desc: "International forum connecting industry experts with academic researchers to discuss the future of Agriculture 5.0.", img: "https://images.unsplash.com/photo-1558444479-c8f01052877a?w=1000" },
-                    { title: "Scientific Incubation", desc: "Mentorship program designed to turn student research papers into publishable scientific journals.", img: "https://images.unsplash.com/photo-1532187863486-abf9d39d9995?w=1000" }
-                ]
-            }
-        };
+        function switchPage(pageId, scrollTop = true) {
 
-        // Render Division Cards
-        const scrollContainer = document.getElementById('scrollContainer');
-        scrollContainer.innerHTML = divisions.map(div => {
-            const safeImg = formatGDriveUrl(div.img);
-            return `
-                <div onclick="openDivision(${div.id})" class="division-card flex-none w-[340px] h-[500px] rounded-[3rem] overflow-hidden relative group cursor-pointer shadow-xl bg-gray-200">
-                    <div class="absolute inset-0 bg-cover bg-center transition-transform duration-1000 group-hover:scale-110" style="background-image: url('${safeImg}');"></div>
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
-                    <div class="absolute bottom-0 p-10 text-white w-full">
-                        <h3 class="text-2xl font-bold font-heading uppercase tracking-wide">${div.name}</h3>
-                        <div class="h-1 w-12 bg-ipb-yellow mt-4 transition-all duration-500 group-hover:w-full"></div>
-                    </div>
-                </div>
-            `;
-        }).join('');
+    // simpan posisi scroll sebelum pindah
+    lastScrollPosition = window.scrollY;
+
+    document.querySelectorAll('.page-container').forEach(p => {
+        p.classList.remove('active');
+        p.style.display = 'none';
+    });
+
+    const target = document.getElementById(pageId);
+    if (target) {
+        target.style.display = 'block';
+        target.offsetHeight;
+        target.classList.add('active');
+    }
+
+    if (scrollTop) {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+        // kembalikan posisi scroll sebelumnya
+        setTimeout(() => {
+            window.scrollTo({ top: lastScrollPosition, behavior: 'auto' });
+        }, 10);
+    }
+}
+    function goBackToDepartments() {
+    switchPage('main-landing', false);
+
+    setTimeout(() => {
+        const section = document.getElementById('himalogin');
+        if (section) {
+            section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    }, 100);
+}
 
         function openDivision(id) {
-            const data = divisionsData[id] || { 
-                name: divisions.find(d => d.id === id).name, 
-                shortDesc: "Leading the community toward excellence through strategic innovation and collaborative growth.",
-                progs: [
-                    { title: "Flagship Program One", desc: "Transformative initiative focusing on core department goals for this academic year.", img: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1000" },
-                    { title: "Digital Optimization", desc: "Integrating modern technology to streamline internal processes and public communication.", img: "https://images.unsplash.com/photo-1552664730-d307ca884978?w=1000" },
-                    { title: "Legacy Outreach", desc: "Ensuring our department provides a lasting positive impact on the agroindustrial community.", img: "https://images.unsplash.com/photo-1517048676732-d65bc937f952?w=1000" }
-                ]
-            };
-
+            const divData = divisions.find(d => d.id === id);
             const content = document.getElementById('detail-content');
-            
-            let programsHtml = data.progs.map((prog, idx) => {
-                const isEven = idx % 2 !== 0;
-                const imgUrl = formatGDriveUrl(prog.img);
-                
-                return `
-                <div class="program-container mb-40 reveal-apple">
+            content.innerHTML = `
+                <h1 class="text-6xl md:text-8xl font-black text-ipb-blue mb-32 uppercase tracking-tighter text-center reveal-apple">${divData.name}</h1>
+                ${divData.progs.map((p, idx) => `
+                <div class="program-container reveal-apple" style="transition-delay: ${idx * 150}ms">
                     <div class="program-image-wrapper">
-                        <img src="${imgUrl}" alt="${prog.title}">
+                        <img src="${p.img}" alt="${p.title}" onerror="this.src='https://via.placeholder.com/800x450?text=Foto+Program'">
                     </div>
-                    <div class="max-w-xl mx-auto mt-[-80px] md:mt-[-120px] px-4">
-                        <div class="bg-white p-10 rounded-[2.5rem] shadow-2xl border border-gray-100 text-float ${isEven ? 'text-float-right' : 'text-float-left'}">
-                            <span class="text-ipb-yellow font-black tracking-widest uppercase text-[10px]">PROGRAM 0${idx+1}</span>
-                            <h3 class="text-3xl font-extrabold text-ipb-blue mt-2 mb-4 leading-tight">${prog.title}</h3>
-                            <p class="text-gray-600 leading-relaxed text-lg font-medium">${prog.desc}</p>
+                    <div class="max-w-xl mx-auto mt-[-100px] px-4 relative z-10">
+                        <div class="bg-white/90 backdrop-blur-xl p-12 rounded-[3.5rem] shadow-2xl ${idx % 2 !== 0 ? 'text-float-right' : 'text-float-left'} border border-gray-100">
+                            <h3 class="text-4xl font-extrabold text-ipb-blue mb-5 uppercase tracking-tight">${p.title}</h3>
+                            <p class="text-gray-600 font-medium leading-relaxed text-lg">${p.desc}</p>
                         </div>
                     </div>
-                </div>`;
-            }).join('');
-
-            content.innerHTML = `
-                <div class="mb-24 reveal-apple active">
-                    <h1 class="font-heading text-5xl md:text-8xl font-black text-ipb-blue mb-8 uppercase tracking-tighter">${data.name}</h1>
-                    <p class="text-2xl text-gray-500 max-w-3xl font-medium italic border-l-8 border-ipb-yellow pl-8 leading-relaxed">${data.shortDesc}</p>
-                </div>
-                <div class="mb-20 reveal-apple active">
-                    <div class="text-center mb-24">
-                        <h2 class="text-4xl font-black text-gray-900 uppercase tracking-widest inline-block border-b-8 border-ipb-yellow pb-2">Work Programs</h2>
-                    </div>
-                    ${programsHtml}
-                </div>
+                </div>`).join('')}
             `;
-
             switchPage('division-detail');
-            setTimeout(setupRevealObserver, 100);
-        }
-
-        // --- Core Page Logic ---
-
-        function switchPage(pageId) {
-            const pages = ['main-content', 'division-detail', 'auditorium-layout'];
-            pages.forEach(p => {
-                const el = document.getElementById(p);
-                if(p === pageId) {
-                    el.style.display = 'block';
-                    setTimeout(() => el.classList.remove('page-hidden'), 50);
-                } else {
-                    el.classList.add('page-hidden');
-                    el.style.display = 'none';
-                }
-            });
-            window.scrollTo({ top: 0, behavior: 'instant' });
-        }
-
-        function goHome() {
-            switchPage('main-content');
             setTimeout(reveal, 100);
         }
-
-        function setupRevealObserver() {
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('active');
-                    }
-                });
-            }, { threshold: 0.15 });
-
-            document.querySelectorAll('.reveal-apple').forEach(el => observer.observe(el));
-        }
-
-        function reveal() {
-            document.querySelectorAll(".reveal-apple").forEach(el => {
-                if (el.getBoundingClientRect().top < window.innerHeight - 50) el.classList.add("active");
-            });
-        }
-
-        // Initialize and process all images/backgrounds on load
-        window.onload = () => {
-            // Process Hero Background
-            const heroBg = document.getElementById('hero-bg');
-            const bgUrl = formatGDriveUrl(heroBg.getAttribute('data-bg'));
-            if (bgUrl) heroBg.style.backgroundImage = `url('${bgUrl}')`;
-
-            // Process Main Logo
-            const logo = document.getElementById('main-logo');
-            const logoUrl = formatGDriveUrl(logo.getAttribute('data-src'));
-            if (logoUrl) logo.src = logoUrl;
-
-            // Process all static gdrive-img class
-            document.querySelectorAll('.gdrive-img').forEach(img => {
-                const src = formatGDriveUrl(img.getAttribute('data-src'));
-                if (src) img.src = src;
-            });
-
-            reveal();
-            setupRevealObserver();
-        };
-
-        window.addEventListener("scroll", reveal);
-
-        document.getElementById('registrationForm').addEventListener('submit', (e) => {
-            e.preventDefault();
-            document.getElementById('success-overlay').classList.remove('hidden');
-        });
+            const kelompokNames = [
+    "Kelompok 1 - Talent Interest",
+    "Kelompok 2 - Academic student Achievement",
+    "Kelompok 3 - Technopreneur",
+    "Kelompok 4 - Public Relation",
+    "Kelompok 5 - Human Resource Development",
+    "Kelompok 6 - Community Service and Development",
+    "Kelompok 7 - Internal",
+    "Kelompok 8 - Media Research Information"
+];
 
         function openAuditorium() {
             switchPage('auditorium-layout');
             const grid = document.getElementById('cinema-grid');
-            grid.innerHTML = Array(12).fill(0).map((_, i) => `
-                <div class="flex gap-3">
-                    ${Array(14).fill(0).map(() => `<div class="seat bg-red-900 w-6 h-6 rounded-t-lg shadow-inner"></div>`).join('')}
-                </div>
-            `).join('');
+            let html = '';
+            for (let row = 1; row <= 14; row++) {
+                let rowLabel;
+
+if (row === 1) {
+    rowLabel = "Tamu Undangan";
+} 
+else if (row >= 2 && row <= 9) {
+    rowLabel = kelompokNames[row - 2] || `Kelompok ${row-1}`;
+} 
+else {
+    rowLabel = `Baris ${row}`;
+}
+
+                let seatType = row < 2 ? 'seat-vip' : (row <= 9 ? 'seat-group' : 'seat-regular');
+                html += `<div class="flex items-center justify-center gap-4">
+                            <span class="row-label uppercase italic tracking-tighter opacity-80">${rowLabel}</span>
+                            <div class="flex gap-1.5 px-4">`;
+                for (let col = 1; col <= 15; col++) {
+                    html += `<div class="seat ${seatType} transition duration-300 hover:scale-125 cursor-help" title="${rowLabel} - Kursi ${col}"></div>`;
+                }
+                html += `   </div><span class="w-[100px] text-[10px] text-left opacity-30 font-bold uppercase">${row}</span></div>`;
+            }
+            grid.innerHTML = html;
         }
+
+        function reveal() {
+            document.querySelectorAll(".reveal-apple, .card-pop").forEach(el => {
+                const rect = el.getBoundingClientRect();
+                if (rect.top < window.innerHeight - 50) el.classList.add("active");
+            });
+        }
+
+        /**
+         * LOGIKA PENGIRIMAN DATA FORM
+         */
+        const form = document.getElementById('registrationForm');
+        const btnSubmit = document.getElementById('btn-submit');
+        const submitText = document.getElementById('submit-text');
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            // Set loading state
+            btnSubmit.disabled = true;
+            submitText.innerHTML = '<span class="spinner"></span> Processing...';
+
+            const formData = new FormData(form);
+            
+            /**
+             * Jika Anda ingin benar-benar menyambungkan ke Google Sheets:
+             * 1. Deploy Apps Script dengan fungsi doPost(e)
+             * 2. Ganti URL SCRIPT_URL di atas.
+             * 3. Gunakan fetch(SCRIPT_URL, { method: 'POST', body: formData })
+             */
+            
+            // Simulasi pengiriman data (karena tidak ada URL script real di sini)
+            
+
+             
+            fetch(SCRIPT_URL, { method: 'POST', body: formData })
+                .then(response => {
+                    document.getElementById('success-overlay').classList.remove('hidden');
+                    form.reset();
+                })
+                .catch(error => {
+                    console.error('Error!', error.message);
+                    alert("Terjadi kesalahan saat menyimpan data. Coba lagi.");
+                })
+                .finally(() => {
+                    btnSubmit.disabled = false;
+                    submitText.innerText = 'Submit Registration';
+                });
+            
+        });
+
+        function resetForm() {
+            document.getElementById('success-overlay').classList.add('hidden');
+        }
+
+        window.onload = () => {
+            document.getElementById('scrollContainer').innerHTML = divisions.map((div, idx) => `
+                <div onclick="openDivision(${div.id})" 
+                     class="division-card card-pop flex-none w-[360px] h-[520px] rounded-[3.5rem] overflow-hidden relative group cursor-pointer shadow-xl bg-gray-200" 
+                     style="transition-delay: ${idx * 100}ms">
+                    <div class="absolute inset-0 bg-cover bg-center transition-transform duration-[2000ms] ease-out group-hover:scale-110" 
+                         style="background-image: url('${div.img}');"></div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-80 group-hover:opacity-100 transition-opacity duration-700"></div>
+                    <div class="absolute bottom-0 p-12 text-white w-full translate-y-4 group-hover:translate-y-0 transition-transform duration-700">
+                        <span class="text-[10px] font-bold uppercase tracking-[0.3em] opacity-60 mb-2 block">Department</span>
+                        <h3 class="text-3xl font-bold uppercase tracking-tighter leading-none">${div.name}</h3>
+                        <div class="h-1.5 w-12 bg-ipb-yellow mt-6 transition-all duration-700 group-hover:w-full"></div>
+                    </div>
+                </div>`).join('');
+            reveal();
+            window.addEventListener("scroll", reveal);
+        };
     </script>
 </body>
 </html>
