@@ -155,8 +155,21 @@
                 <a href="javascript:void(0)" onclick="goBackToDepartments()">Himalogin</a>
                 <a href="#register" class="px-6 py-2.5 bg-ipb-blue text-white font-bold rounded-full hover:bg-blue-800 transition transform hover:scale-105 shadow-lg">Register Now</a>
             </div>
+            <!-- Mobile Hamburger -->
+            <button id="hamburger-btn" class="md:hidden text-ipb-blue text-2xl">
+            <i class="fas fa-bars"></i>
+            </button>
         </div>
     </nav>
+    <!-- Mobile Menu -->
+<div id="mobile-menu" 
+     class="md:hidden hidden fixed top-20 left-0 w-full bg-white shadow-lg px-6 py-6 space-y-4 z-40">
+    <a href="javascript:void(0)" onclick="switchPage('main-landing')" class="block font-semibold text-ipb-blue">Landing Page</a>
+    <a href="javascript:void(0)" onclick="switchPage('page-courses')" class="block font-semibold text-ipb-blue">Mata Kuliah</a>
+    <a href="javascript:void(0)" onclick="goBackToDepartments()" class="block font-semibold text-ipb-blue">Himalogin</a>
+    <a href="#register" class="block font-semibold text-ipb-blue">Register</a>
+</div>
+
 
     <!-- PAGE 1: MAIN LANDING -->
     <div id="main-landing" class="page-container active">
@@ -370,7 +383,19 @@
          * Ganti URL_SCRIPT_WEB_APP dengan URL yang Anda dapatkan setelah Deploy Apps Script sebagai Web App.
          */
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx4rOgxbAj8xSk_VBihC8F6B3vav8u0uf8kVTLoxp1fabK5AROQ9twgR-hswVbqql2t/exec'; 
-         
+        const hamburgerBtn = document.getElementById("hamburger-btn");
+const mobileMenu = document.getElementById("mobile-menu");
+
+hamburgerBtn.addEventListener("click", () => {
+    mobileMenu.classList.toggle("hidden");
+});
+document.querySelectorAll("#mobile-menu a").forEach(link => {
+    link.addEventListener("click", () => {
+        mobileMenu.classList.add("hidden");
+    });
+});
+
+ 
         const divisions = [
             { 
                 id: 1, 
